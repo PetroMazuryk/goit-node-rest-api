@@ -41,3 +41,14 @@ export const addContact = async (name, email, phone) => {
   await updateListContacts(getAllContacts);
   return newContact;
 };
+
+export const updateContactById = async (id, body) => {
+  const contacts = await listContacts();
+  const index = contacts.findIndex((item) => item.id === id);
+  if (index === -1) {
+    return null;
+  }
+  contacts[index] = { id, ...body };
+  await updateListContacts(contacts);
+  return contacts[index];
+};
