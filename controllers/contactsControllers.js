@@ -1,4 +1,10 @@
-import contactsService from "../services/contactsServices.js";
+import {
+  listContacts,
+  getContactById,
+  removeContact,
+  addContact,
+  updateContactById,
+} from "../services/contactsServices.js";
 
 export const getAllContacts = (req, res) => {};
 
