@@ -17,10 +17,10 @@ contactsRouter.delete("/:id", ctrl.deleteContact);
 
 contactsRouter.post("/", validateBody(createContactSchema), ctrl.createContact);
 
-// contactsRouter.put(
-//   "/:id",
-//   validateBody(updateContactSchema),
-//   ctrl.updateContact
-// );
+contactsRouter.put(
+  "/:id",
+  validateBody(updateContactSchema),
+  ctrl.updateContact
+);
 
 export default contactsRouter;
