@@ -1,10 +1,10 @@
-import {
-  listContacts,
-  getContactById,
-  removeContact,
-  addContact,
-  updateContactById,
-} from "../services/contactsServices.js";
+// import {
+//   listContacts,
+//   getContactById,
+//   removeContact,
+//   addContact,
+//   updateContactById,
+// } from "../services/contactsServices.js";
 
 import HttpError from "../helpers/HttpError.js";
 import { ctrlWrapper } from "../helpers/ctrlWrapper.js";
@@ -35,15 +35,14 @@ const getAllContacts = async (req, res) => {
 //   res.status(200).json({ result, message: "Delete success" });
 // };
 
-// const createContact = async (req, res) => {
-//   const { name, email, phone } = req.body;
-//   const result = await addContact(name, email, phone);
+const createContact = async (req, res) => {
+  const result = await Contact.create(req.body);
 
-//   if (!result) {
-//     throw HttpError(201, "Not found");
-//   }
-//   res.status(201).json(result);
-// };
+  if (!result) {
+    throw HttpError(201, "Not found");
+  }
+  res.status(201).json(result);
+};
 
 // const updateContact = async (req, res) => {
 //   const { id } = req.params;
@@ -60,6 +59,6 @@ export default {
   getAllContacts: ctrlWrapper(getAllContacts),
   // getOneContact: ctrlWrapper(getOneContact),
   // deleteContact: ctrlWrapper(deleteContact),
-  // createContact: ctrlWrapper(createContact),
+  createContact: ctrlWrapper(createContact),
   // updateContact: ctrlWrapper(updateContact),
 };
