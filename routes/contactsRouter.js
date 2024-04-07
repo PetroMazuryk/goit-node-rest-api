@@ -11,9 +11,9 @@ const contactsRouter = express.Router();
 
 contactsRouter.get("/", ctrl.getAllContacts);
 
-// contactsRouter.get("/:id", ctrl.getOneContact);
+contactsRouter.get("/:id", ctrl.getOneContact);
 
-// contactsRouter.delete("/:id", ctrl.deleteContact);
+contactsRouter.delete("/:id", ctrl.deleteContact);
 
 contactsRouter.post("/", validateBody(createContactSchema), ctrl.createContact);
 
