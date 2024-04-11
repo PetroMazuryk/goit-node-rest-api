@@ -11,4 +11,6 @@ authRouter.post(
   ctrl.register
 );
 
+authRouter.post("/login", validateBody(schemas.loginSchema), ctrl.login);
+
 export default authRouter;
