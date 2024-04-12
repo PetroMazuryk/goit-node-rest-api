@@ -3,6 +3,7 @@ import jwt from "jsonwebtoken";
 import { User } from "../models/users.js";
 import HttpError from "../helpers/HttpError.js";
 import { ctrlWrapper } from "../helpers/ctrlWrapper.js";
+import { token } from "morgan";
 
 const { SECRET_KEY } = process.env;
 
@@ -57,8 +58,17 @@ const getCurrent = async (req, res) => {
   });
 };
 
+const logout = async (req, res) => {
+  const { _id } = req.user;
+
+  await User.findByIdAndUpdate(_id, { token: "" });
+
+  res.json({ message: "Logout success" });
+};
+
 export default {
   register: ctrlWrapper(register),
   login: ctrlWrapper(login),
   getCurrent: ctrlWrapper(getCurrent),
+  logout: ctrlWrapper(logout),
 };
