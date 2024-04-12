@@ -3,7 +3,8 @@ import { ctrlWrapper } from "../helpers/ctrlWrapper.js";
 import { Contact } from "../models/contact.js";
 
 const getAllContacts = async (req, res) => {
-  const result = await Contact.find({}, "-createdAt -updatedAt");
+  const { _id: owner } = req.user;
+  const result = await Contact.find({ owner }, "-createdAt -updatedAt");
   res.json(result);
 };
 
@@ -28,7 +29,8 @@ const deleteContact = async (req, res) => {
 };
 
 const createContact = async (req, res) => {
-  const result = await Contact.create(req.body);
+  const { _id: owner } = req.user;
+  const result = await Contact.create({ ...req.body, owner });
 
   if (!result) {
     throw HttpError(201, "Not found");

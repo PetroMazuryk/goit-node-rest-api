@@ -36,6 +36,7 @@ contactsRouter.put(
 
 contactsRouter.patch(
   "/:id/favorite",
+  authenticate,
   isValidId,
   validateBody(uptadeFavoriteSchema),
   ctrl.updateStatusContact
