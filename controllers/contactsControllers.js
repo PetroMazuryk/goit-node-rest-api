@@ -3,15 +3,32 @@ import { ctrlWrapper } from "../helpers/ctrlWrapper.js";
 import { Contact } from "../models/contact.js";
 
 const getAllContacts = async (req, res) => {
-  const { _id: owner } = req.user;
-  const { page = 1, limit = 5 } = req.query;
+  // const { _id: owner } = req.user;
+  // const { page = 1, limit = 5, favorite = false } = req.query;
+  const {
+    user: { _id: owner },
+    query: { page = 1, limit = 5, favorite = false },
+  } = req;
   const skip = (page - 1) * limit;
 
-  const result = await Contact.find({ owner }, "-createdAt -updatedAt", {
-    skip,
-    limit,
-  }).populate("owner", "email ");
-  res.json(result);
+  let contacts;
+  if (favorite) {
+    contacts = await Contact.find(
+      { owner, favorite: true },
+      "-createdAt -updatedAt",
+      {
+        skip,
+        limit: Number(limit),
+      }
+    ).populate("owner", " email subscription");
+  } else {
+    contacts = await Contact.find({ owner }, "-createdAt -updatedAt", {
+      skip,
+      limit: Number(limit),
+    }).populate("owner", "email subscription");
+  }
+
+  res.json(contacts);
 };
 
 const getOneContact = async (req, res) => {
