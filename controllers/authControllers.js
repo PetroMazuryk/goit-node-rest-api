@@ -3,7 +3,6 @@ import jwt from "jsonwebtoken";
 import { User } from "../models/users.js";
 import HttpError from "../helpers/HttpError.js";
 import { ctrlWrapper } from "../helpers/ctrlWrapper.js";
-import { token } from "morgan";
 
 const { SECRET_KEY } = process.env;
 
