@@ -1,4 +1,5 @@
 import Joi from "joi";
+const subscriptionList = ["starter", "pro", "business"];
 
 export const createContactSchema = Joi.object({
   name: Joi.string().min(2).max(20).required(),
@@ -16,4 +17,10 @@ export const updateContactSchema = Joi.object({
 
 export const uptadeFavoriteSchema = Joi.object({
   favorite: Joi.boolean().required(),
+});
+
+export const updateSubscriptionSchema = Joi.object({
+  subscription: Joi.string()
+    .valid(...subscriptionList)
+    .required(),
 });
