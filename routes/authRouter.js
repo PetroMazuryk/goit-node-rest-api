@@ -4,6 +4,7 @@ import { schemas } from "../models/users.js";
 import ctrl from "../controllers/authControllers.js";
 import { authenticate } from "../middlewares/authenticate.js";
 import { updateSubscriptionSchema } from "../schemas/contactsSchemas.js";
+import { upload } from "../middlewares/upload.js";
 
 const authRouter = express.Router();
 
@@ -24,6 +25,13 @@ authRouter.patch(
   authenticate,
   validateBody(updateSubscriptionSchema),
   ctrl.updateSubscriptionUsers
+);
+
+authRouter.patch(
+  "/avatars",
+  authenticate,
+  upload.single("avatar"),
+  ctrl.updateAvatar
 );
 
 export default authRouter;
