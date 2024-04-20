@@ -3,6 +3,7 @@ import jwt from "jsonwebtoken";
 import gravatar from "gravatar";
 import path from "path";
 import fs from "fs/promises";
+// import crypto from "crypto";
 import Jimp from "jimp";
 
 import { User } from "../models/users.js";
@@ -22,6 +23,8 @@ const register = async (req, res) => {
   }
 
   const hashPassword = await bcrypt.hash(password, 10);
+  // const hashEmail = crypto.createHash("md5").update(email).digest("hex");
+  // const avatarUrl = `https://gravatar.com/avatar/S{hashEmail}.jpg?d=robohash`;
   const avatarUrl = gravatar.url(email);
 
   const newUser = await User.create({
@@ -89,13 +92,19 @@ const updateSubscriptionUsers = async (req, res) => {
 const updateAvatar = async (req, res) => {
   const { _id } = req.user;
   const { path: tempUpload, originalname } = req.file;
-  const resultUpload = path.join(avatarsDir, originalname);
+  const fileName = `${_id}_${originalname}`;
+  const resultUpload = path.join(avatarsDir, fileName);
+
+  const image = await Jimp.read(tempUpload);
+  const imageResize = await image.resize(250, 250);
+  await imageResize.writeAsync(tempUpload);
+
   await fs.rename(tempUpload, resultUpload);
 
-  const avatarUrl = path.join("avatars", originalname);
+  const avatarUrl = path.join("avatars", fileName);
   await User.findByIdAndUpdate(_id, { avatarUrl });
 
-  res.json({
+  res.status(200).json({
     avatarUrl,
   });
 };
