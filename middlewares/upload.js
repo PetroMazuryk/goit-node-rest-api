@@ -11,12 +11,11 @@ const multerConfig = multer.diskStorage({
   },
 });
 
-const fileFilter = (req, file, cb) => {
+const multerFilter = (req, file, cb) => {
   const extension = file.originalname.split(".").pop();
-  console.log(extension);
 
   if (extension === "exe") {
-    return cb(HttpError(400, "exe is not allowed"), false);
+    cb(HttpError(400, "exe is not allowed"), false);
   }
 
   cb(null, true);
@@ -28,7 +27,7 @@ const limits = {
 
 const upload = multer({
   storage: multerConfig,
-  fileFilter,
+  fileFilter: multerFilter,
   limits,
 });
 
