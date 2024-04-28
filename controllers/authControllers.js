@@ -3,14 +3,16 @@ import jwt from "jsonwebtoken";
 import gravatar from "gravatar";
 import path from "path";
 import fs from "fs/promises";
+import { nanoid } from "nanoid";
 // import crypto from "crypto";
 import Jimp from "jimp";
 
 import { User } from "../models/users.js";
 import HttpError from "../helpers/HttpError.js";
 import { ctrlWrapper } from "../helpers/ctrlWrapper.js";
+import { sendEmail } from "../helpers/sendEmail.js";
 
-const { SECRET_KEY } = process.env;
+const { SECRET_KEY, PROJECT_URL } = process.env;
 
 const avatarsDir = path.join("public", "avatars");
 
@@ -26,12 +28,24 @@ const register = async (req, res) => {
   // const hashEmail = crypto.createHash("md5").update(email).digest("hex");
   // const avatarUrl = `https://gravatar.com/avatar/S{hashEmail}.jpg?d=robohash`;
   const avatarUrl = gravatar.url(email);
+  const verificationToken = nanoid();
 
   const newUser = await User.create({
     ...req.body,
     password: hashPassword,
     avatarUrl,
+    verificationToken,
   });
+
+  const verifyEmail = {
+    to: email,
+    subject: "Verify your email",
+    html: `<h1>Verify your email</h1>
+     <p>Please click the link below to verify your email</p>
+     <p><a target="_blank" href="${PROJECT_URL}/api/users/verify/${verificationToken}">${verificationToken}</a></p>`,
+  };
+
+  await sendEmail(verifyEmail);
 
   res.status(201).json({
     email: newUser.email,
